@@ -7,10 +7,16 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 2em;
+      padding: 1em;
+      max-width: 800px;
       margin: auto;
     }
     #content {
-      background: black;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 1em;
     }
     .loader {
       font-style: italic;
@@ -25,15 +31,15 @@
 
   <script>
     fetch('JLF_RESUME.html')
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.text();
-      })
+      .then(res => res.text())
       .then(html => {
-        document.getElementById('content').innerHTML = html;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const bodyContent = doc.body.innerHTML;
+        document.getElementById('content').innerHTML = bodyContent;
       })
-      .catch(error => {
-        document.getElementById('content').innerHTML = `<p style="color:red;">Failed to load content: ${error}</p>`;
+      .catch(err => {
+        document.getElementById('content').innerHTML = `<p style="color:red;">Failed to load content: ${err}</p>`;
       });
   </script>
 </body>
