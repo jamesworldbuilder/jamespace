@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Resume - James L Forsyth (Offline)</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    html, body {
+      background-color: black; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 999px;
+      margin: 1em;
+      padding: 2em;
+      background-color: white; 
+      color: black;
+    }
+    textarea {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="markdown-input">
+# JAMES L FORSYTH
+**Contact:** phone | email
+
+---
+I am detail-oriented and hard-working. I’m a computer guy who can do physical labor. My educational background and personal interests are in video game development. I have 5+ years of warehouse and floor experience working in retail. I have 5+ years of experience working as an auditor and front-desk clerk in hospitality. I have 5 years of remote-work experience in the web compliance industry, performing search-ad analysis, web-crawler systems optimizations, and 1 year of experience in website back-end testing.
+
+## KNOWLEDGE BASE
+> **Experienced with cross-platform word processors:** *Microsoft Word, Google Docs, LibreOffice Writer*  
+> **Experienced with cross-platform spreadsheet tools:** *Microsoft Excel, Google Sheets, LibreOffice Calc*  
+> **Comfortable working in multiple operating systems:** *Microsoft Windows, macOS, Linux*  
+> **Familiar with industry-standard Property Management System (PMS) software:** *OperaPMS, RDPWin, SynXis*  
+
+> **Familiar with a diverse range of professional skills:**  
+> &emsp;– **Administrative & Analytical:** *Data Entry, Data Analysis, Documentation, Record Keeping, Organization, Improvisation*  
+> &emsp;– **Technical & Web-based:** *Coding, Exploratory Testing, Affiliate Marketing, Web Compliance*  
+> &emsp;– **Customer-Facing & Support Roles:** *Customer Support, Technical Support, Point of Sale (POS) Systems, Cashiering*  
+> &emsp;– **Operational & Manual Work:** *Warehouse Operations, Auditing, Inventory Management, Housekeeping, Dishwashing, Cleaning, Third-Party Relationship Management*
+
+> **Familiar with a range of programming and scripting languages:**  
+> &emsp;– **Automation & Pattern-Matching:** *Bash, Python, Git, Regex*  
+> &emsp;– **Web Development:** *HTML, CSS, JavaScript, TypeScript, PHP, Django*  
+> &emsp;– **Application Programming:** *C#, Java*  
+> &emsp;– **Testing & QA:** *Selenium, Gherkin*  
+> &emsp;– **Data & Markup:** *SQL, JSON, XML, Markdown, SSH*  
+> &emsp;– **Package Management:** *APT, PIP, Homebrew* 
+
+> **Familiar with a variety of technical tools, platforms, and environments:**  
+> &emsp;– **Cloud & Infrastructure:** *Amazon Web Services (AWS), Nutanix*  
+> &emsp;– **Monitoring & Logging:** *Kibana, Loggly*  
+> &emsp;– **Version Control:** *GitHub, GitLab, Bitbucket*  
+> &emsp;– **Customer Relationship Management (CRM) & Support Tools:** *Salesforce, Zendesk*  
+> &emsp;– **Virtualization Tools:** *VirtualBox, VMware, QEMU*  
+> &emsp;– **Integrated Development Environments (IDEs):** *PyCharm, WebStorm, Visual Studio (VS) Code*  
+> &emsp;– **Creative & Design Tools:** *3ds Max, Photopea, Microsoft (MS) Paint*  
+
+## WORK HISTORY
+> **CASHIER**  
+> &emsp;at *Stanford University – Lakeside Dining, Palo Alto, CA* (Mar. 2024 – Apr. 2024)  
+> **STORE CLERK**  
+> &emsp;at *Nob Hill Foods, Redwood City, CA* (Oct. 2023 – Jan. 2024)  
+> **JR. QUALITY ASSURANCE (QA) TEST ENGINEER**  
+> &emsp;at *BrandVerity (Acquired by Partnerize), Spokane, WA* (Oct. 2021 – Mar. 2023)  
+> **ADVERTISING COMPLIANCE ANALYST**  
+> &emsp;at *BrandVerity, Seattle, WA* (May 2021 – Mar. 2023)  
+> **ACCOUNT SERVICES ANALYST**  
+> &emsp;at *BrandVerity, Seattle, WA* (May 2019 – Apr. 2021)  
+> **NIGHT AUDITOR & FRONT-DESK CLERK**  
+> &emsp;at *Silver Cloud Hotel – University District, Seattle, WA* (Jan. 2019 – Feb. 2020)  
+> &emsp;at *Ramada Inn, Greensboro, NC* (Jul. 2017 – Dec. 2018)  
+> &emsp;at *Holiday Inn Express & Suites, Archdale, NC* (Jan. 2015 – Dec. 2018)  
+> **SALES ASSOCIATE**  
+> &emsp;at *Kohl's, Greensboro, NC* (Oct. 2014 – Jun. 2017)
+
+## EDUCATION
+> **Self-taught**  
+> **Earned an Associate of Applied Science Degree in Simulation & Game Design**  
+> &emsp;at *Guilford Technical Community College, High Point, NC* (Class of 2016)
+---
+  </textarea>
+  <div id="content"></div>
+  <script>
+    const input = document.getElementById('markdown-input');
+    const content = document.getElementById('content');
+
+    function render() {
+      content.innerHTML = marked.parse("\[ "+window.location.href+" \]" + "\n\n" + input.value);
+    }
+
+    window.onload = render;
+  </script>
+</body>
+</html>
