@@ -1,43 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Index Page</title>
-  <style>
-    html, body {
-      background-color: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: white;
-      max-width: 999px;
-      padding: 2em;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    }
-    #content {
-      margin-top: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetching Resume...</title>
+    <meta http-equiv="refresh" content="0;url=JLF_RESUME.html">
 </head>
 <body>
-  <div>
-    <div id="content">Loading...</div>
-  </div>
-
-  <script>
-    fetch('JLF_RESUME.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('content').innerHTML = html;
-      })
-      .catch(err => {
-        document.getElementById('content').innerHTML = `<p style="color:red;">Error: ${err}</p>`;
-      });
-  </script>
+    <p>Redirecting to <a href="JLF_RESUME.html">JLF_RESUME.html</a>...</p>
 </body>
 </html>
