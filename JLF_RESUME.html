@@ -91,9 +91,21 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
     const content = document.getElementById('content');
 
     function render() {
-      content.innerHTML = marked.parse("\[ "+window.location.href+" \]" + "\n\n" + input.value);
+      // Step 1: Convert markdown to HTML
+      const rawHtml = marked.parse(input.value);
+
+      // Step 2: Inject HTML into the page
+      content.innerHTML = rawHtml;
+
+      // Step 3: Patch all links to open in a new tab
+      const links = content.querySelectorAll('a');
+      links.forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      });
     }
     window.onload = render;
+    input.addEventListener('input', render);
   </script>
 </body>
 </html>
