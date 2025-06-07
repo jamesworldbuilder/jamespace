@@ -1,6 +1,6 @@
 # JAMES L FORSYTH
 **Contact:** phone | email | 
-[website](https://jamesworldbuilder.github.io/jamespace/JLF_RESUME.html) | [github](https://github.com/jamesworldbuilder)
+[website](https://jamesworldbuilder.github.io/jamespace/) | [github](https://github.com/jamesworldbuilder)
 
 ---
 I am detail-oriented and hard-working. I’m a computer guy who can do physical labor. My educational background and personal interests are in video game development. I have 5+ years of warehouse and floor experience working in retail. I have 5+ years of experience working as an auditor and front-desk clerk in hospitality. I have 5 years of remote-work experience in the web compliance industry, performing search-ad analysis, web-crawler systems optimizations, and 1 year of experience in website back-end testing.
