@@ -36,7 +36,7 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 
 ## WORK HISTORY
 **CASHIER**  
-> *Stanford University – Lakeside Dining, Palo Alto, CA* (Mar. 2024 – Apr. 2024)  
+> at *Stanford University – Lakeside Dining, Palo Alto, CA* (Mar. 2024 – Apr. 2024)  
 
 **STORE CLERK**  
 > at *Nob Hill Foods, Redwood City, CA* (Oct. 2023 – Jan. 2024)  
