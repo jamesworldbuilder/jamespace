@@ -21,7 +21,7 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 - **Automation & Pattern-Matching:** *Bash, Python, Git, Regex*  
 - **Web Development:** *HTML, CSS, JavaScript, TypeScript, PHP, Django*  
 - **Application Programming:** *C#, Java*  
-- **Testing & QA:** *Selenium, Gherkin*  
+- **Testing & QA:** *Selenium, Gherkin, Cucumber*  
 - **Data & Markup:** *SQL, JSON, XML, Markdown, SSH*  
 - **Package Management:** *APT, PIP, Homebrew* 
 
