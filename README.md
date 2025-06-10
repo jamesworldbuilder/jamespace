@@ -1,5 +1,5 @@
 # JAMES L FORSYTH
-**Contact:** [(336) 313-9697](tel:+13363139697) | [james3895@duck.com](mailto:james3895@duck.com) | 
+**Contact:** [336-313-9697](tel:+13363139697) | [james3895@duck.com](mailto:james3895@duck.com) | 
 [website](https://jamesworldbuilder.github.io/jamespace/) | [github](https://github.com/jamesworldbuilder)
 
 ---
