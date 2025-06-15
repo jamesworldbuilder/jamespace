@@ -8,6 +8,15 @@
         body {
             margin: 0;
             height: 100vh;
+            display: flex;
+        }
+        .resume-container {
+            flex: 0 0 70%;
+            height: 100%;
+        }
+        .game-container {
+            flex: 0 0 30%;
+            height: 100%;
         }
         iframe {
             width: 100%;
@@ -16,7 +25,14 @@
         }
     </style>
 </head>
+    
 <body>
-    <iframe src="JLF_RESUME.html"></iframe>
+    <div class="resume-container">
+        <iframe src="JLF_RESUME.html"></iframe>
+    </div>
+    
+    <div class="game-container">
+        <iframe src="https://tetris-game-573828761433.us-south1.run.app"></iframe>
+    </div>
 </body>
 </html>
