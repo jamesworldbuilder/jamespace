@@ -19,14 +19,14 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 
 **Familiar with a range of programming and scripting languages:**  
 - **Automation & Pattern-Matching:** *Bash, Python, Git, Regex*  
-- **Web Development:** *HTML, CSS, JavaScript, TypeScript, PHP, Django*  
+- **Web Development:** *HTML, CSS, JavaScript, Node.js, TypeScript, PHP, Django*  
 - **Application Programming:** *C#, Java*  
 - **Testing & QA:** *Selenium, Gherkin, Cucumber*  
 - **Data & Markup:** *SQL, JSON, XML, Markdown, SSH*  
 - **Package Management:** *APT, PIP, Homebrew* 
 
 **Familiar with a variety of technical tools, platforms, and environments:**  
-- **Cloud & Infrastructure:** *Amazon Web Services (AWS), Nutanix*  
+- **Cloud & Infrastructure:** *Google Cloud, Amazon Web Services (AWS), Nutanix*  
 - **Monitoring & Logging:** *Kibana, Loggly*  
 - **Version Control:** *GitHub, GitLab, Bitbucket*  
 - **Customer Relationship Management (CRM) & Support Tools:** *Salesforce, Zendesk*  
