@@ -12,26 +12,22 @@
             display: flex; 
             flex-direction: row; 
         }
-
         .resume-container {
             flex: 0 0 70%; 
             height: 100%;
             overflow: auto; 
         }
-
         .game-container {
             flex: 0 0 30%; 
             height: 100%;
             overflow: auto; 
         }
-
         iframe {
             width: 100%;
             height: 100%;
             border: none; 
             overflow: auto; 
         }
-
         /* --- Media Query for Mobile Devices --- */
         /* This rule applies when the screen width is 768px or less (typical tablet/mobile breakpoint) */
         @media (max-width: 768px) {
@@ -40,10 +36,9 @@
                 height: auto; 
                 min-height: 100vh; 
             }
-
             .resume-container,
             .game-container {
-                flex: 1 1 100%;
+                flex: 1 1 100%; 
                 height: 100vh; 
                 min-height: 400px; 
             }
