@@ -179,7 +179,7 @@
                 scrollUpBtn.addEventListener('click', scrollToResume);
                 inGameScrollUpBtn.addEventListener('click', scrollToResume);
 
-                // Send key press messages to the iframe when control buttons are clicked
+                // Send key press messages to the iframe when control buttons are pressed
                 gameControls.addEventListener('click', (event) => {
                     const button = event.target.closest('.control-btn');
                     if (button && button.dataset.code) {
