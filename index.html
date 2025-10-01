@@ -169,6 +169,8 @@
                 const gameIframe = document.getElementById('gameIframe');
                 const gameContainer = document.querySelector('.game-container');
                 const resumeContainer = document.querySelector('.resume-container');
+                
+                const gameOrigin = "https://tetris-game-bo8x.onrender.com";
 
                 const scrollToGame = () => gameContainer.scrollIntoView({ behavior: 'smooth' });
                 const scrollToResume = () => resumeContainer.scrollIntoView({ behavior: 'smooth' });
@@ -177,21 +179,27 @@
                 scrollUpBtn.addEventListener('click', scrollToResume);
                 inGameScrollUpBtn.addEventListener('click', scrollToResume);
 
-                // Send key press messages to the iframe when control buttons are pressed
+                // Send key press messages to the iframe when control buttons are clicked
                 gameControls.addEventListener('click', (event) => {
                     const button = event.target.closest('.control-btn');
                     if (button && button.dataset.code) {
                         const message = { type: 'keydown', code: button.dataset.code };
-                        gameIframe.contentWindow.postMessage(message, '*');
+                        gameIframe.contentWindow.postMessage(message, gameOrigin);
+                        
                         setTimeout(() => {
                             const upMessage = { type: 'keyup', code: button.dataset.code };
-                            gameIframe.contentWindow.postMessage(upMessage, '*');
+                            gameIframe.contentWindow.postMessage(upMessage, gameOrigin);
                         }, 100);
                     }
                 });
 
                 // Listen for messages from the iframe to toggle UI controls
                 window.addEventListener('message', (event) => {
+                    // Security check to ensure messages only come from game URL
+                    if (event.origin !== gameOrigin) {
+                        return; // Ignore messages from other origins
+                    }
+                    
                     if (event.data === 'gameStarted') {
                         scrollUpBtn.style.display = 'none';
                         inGameScrollUpBtn.style.display = 'flex';
