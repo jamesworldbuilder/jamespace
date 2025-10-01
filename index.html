@@ -195,7 +195,7 @@
 
                 // Listen for messages from the iframe to toggle UI controls
                 window.addEventListener('message', (event) => {
-                    // Security check to ensure messages only come from game URL
+                    // Security check to ensure messages only come from the game URL
                     if (event.origin !== gameOrigin) {
                         return; // Ignore messages from other origins
                     }
@@ -204,7 +204,7 @@
                         scrollUpBtn.style.display = 'none';
                         inGameScrollUpBtn.style.display = 'flex';
                         gameControls.style.display = 'flex';
-                    } else if (event.data === 'gameEnded' || event.data === 'gameReset') {
+                    } else if (event.data === 'gameEnded') { 
                         scrollUpBtn.style.display = 'flex';
                         inGameScrollUpBtn.style.display = 'none';
                         gameControls.style.display = 'none';
