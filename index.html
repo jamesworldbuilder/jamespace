@@ -13,17 +13,19 @@
             height: 100vh;
             display: flex;
             flex-direction: row;
-            overflow: hidden; /* Original overflow: hidden retained for desktop */
+            overflow: hidden; /* Prevents scrolling on desktop */
+        }
+        .resume-container, .game-container {
+            position: relative; /* Needed for positioning the arrow buttons */
+            overflow: hidden;
         }
         .resume-container {
             flex: 0 0 70%;
             height: 100%;
-            overflow: hidden;
         }
         .game-container {
             flex: 0 0 30%;
             height: 100%;
-            overflow: hidden;
         }
         iframe {
             width: 100%;
@@ -31,25 +33,100 @@
             border: none;
             overflow: hidden;
         }
-        /* --- Media Query for Mobile Devices --- */
-        /* This rule applies when the screen width is 768px or less */
-        /* TODO: Fix this later; it sucks */
+
+        /* Styles for the scroll arrow buttons (hidden on desktop by default) */
+        .scroll-arrow {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.4);
+            display: none; /* Hidden on desktop */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .scroll-arrow:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #scrollDownBtn { bottom: 0; }
+        #scrollUpBtn { top: 0; }
+
+        /* New square button for in-game state */
+        .scroll-arrow-square {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+            border-radius: 8px;
+        }
+        .scroll-arrow-square:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Container for on-screen game controls */
+        #gameControls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* Individual on-screen control buttons */
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            flex-grow: 1;
+            height: 100%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease;
+        }
+        .control-btn:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .control-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Media Query for Mobile Devices (768px or less) --- */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
-                height: auto; 
-                min-height: 100vh;
-                overflow-y: scroll; /* Allow vertical scrolling on mobile */
-                -webkit-overflow-scrolling: touch; /* Enhance scrolling on iOS */
+                overflow-y: scroll;
+                scroll-snap-type: y mandatory;
+                -webkit-overflow-scrolling: touch;
             }
-            .resume-container,
-            .game-container {
-                flex: 1 1 100%;
-                height: auto; 
-                min-height: 50vh; 
+            .resume-container, .game-container {
+                flex: none;
+                width: 100%;
+                height: 100vh;
+                scroll-snap-align: start;
             }
-            iframe {
-                height: 100%; 
+            .scroll-arrow {
+                display: flex;
             }
         }
     </style>
@@ -57,9 +134,76 @@
 <body>
     <div class="resume-container">
         <iframe src="JLF_RESUME.html"></iframe>
+        <div id="scrollDownBtn" class="scroll-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
     </div>
+    
     <div class="game-container">
-        <iframe src="https://tetris-game-bo8x.onrender.com"></iframe>
+        <iframe id="gameIframe" src="https://tetris-game-bo8x.onrender.com"></iframe>
+        <!-- Scroll up bar (pre-game) -->
+        <div id="scrollUpBtn" class="scroll-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 14L12 9L7 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Square scroll up button (in-game) -->
+        <div id="inGameScrollUpBtn" class="scroll-arrow-square">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 14L12 9L7 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- On-screen game controls (in-game) -->
+        <div id="gameControls">
+            <button class="control-btn" data-code="ArrowLeft"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 19L8 12L15 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="control-btn" data-code="ArrowUp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 15L12 8L19 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="control-btn" data-code="Space" style="font-size: 16px; font-weight: bold; font-family: sans-serif;">SPACE</button>
+            <button class="control-btn" data-code="ArrowDown"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="control-btn" data-code="ArrowRight"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5L16 12L9 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.matchMedia("(max-width: 768px)").matches) {
+                const scrollDownBtn = document.getElementById('scrollDownBtn');
+                const scrollUpBtn = document.getElementById('scrollUpBtn');
+                const inGameScrollUpBtn = document.getElementById('inGameScrollUpBtn');
+                const gameControls = document.getElementById('gameControls');
+                const gameIframe = document.getElementById('gameIframe');
+                const gameContainer = document.querySelector('.game-container');
+                const resumeContainer = document.querySelector('.resume-container');
+
+                const scrollToGame = () => gameContainer.scrollIntoView({ behavior: 'smooth' });
+                const scrollToResume = () => resumeContainer.scrollIntoView({ behavior: 'smooth' });
+
+                scrollDownBtn.addEventListener('click', scrollToGame);
+                scrollUpBtn.addEventListener('click', scrollToResume);
+                inGameScrollUpBtn.addEventListener('click', scrollToResume);
+
+                // Send key press messages to the iframe when control buttons are pressed
+                gameControls.addEventListener('click', (event) => {
+                    const button = event.target.closest('.control-btn');
+                    if (button && button.dataset.code) {
+                        const message = { type: 'keydown', code: button.dataset.code };
+                        gameIframe.contentWindow.postMessage(message, '*');
+                        setTimeout(() => {
+                            const upMessage = { type: 'keyup', code: button.dataset.code };
+                            gameIframe.contentWindow.postMessage(upMessage, '*');
+                        }, 100);
+                    }
+                });
+
+                // Listen for messages from the iframe to toggle UI controls
+                window.addEventListener('message', (event) => {
+                    if (event.data === 'gameStarted') {
+                        scrollUpBtn.style.display = 'none';
+                        inGameScrollUpBtn.style.display = 'flex';
+                        gameControls.style.display = 'flex';
+                    } else if (event.data === 'gameEnded' || event.data === 'gameReset') {
+                        scrollUpBtn.style.display = 'flex';
+                        inGameScrollUpBtn.style.display = 'none';
+                        gameControls.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
