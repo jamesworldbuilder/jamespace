@@ -6,6 +6,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧢</text></svg>">
     <title>Resume - James L Forsyth (Online)</title>
     <style>
+        :root {
+            --block-size: 30px; /* Default size, will be updated by JS */
+        }
         /* Base styles for desktop (horizontal layout) */
         body {
             background-color: #000000;
@@ -14,71 +17,138 @@
             display: flex;
             flex-direction: row;
             overflow: hidden; /* Prevents scrolling on desktop */
-        }
-        .resume-container, .game-container {
-            position: relative; /* Needed for positioning the arrow buttons */
-            overflow: hidden;
+            font-family: sans-serif;
         }
         .resume-container {
             flex: 0 0 70%;
             height: 100%;
+            position: relative;
         }
-        .game-container {
+        .arcade-container {
             flex: 0 0 30%;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: auto; 
+            padding: calc(var(--block-size) * 0.53) calc(var(--block-size) * 0.33) calc(var(--block-size) * 0.33) calc(var(--block-size) * 0.33); 
+            box-sizing: border-box;
         }
+        .game-unit {
+            position: relative;
+            display: flex; 
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0;
+            box-sizing: border-box; 
+            transition: width 0.1s ease, height 0.1s ease;
+            overflow: hidden;
+        }
+        /* The display area for the game iframe */
+        .app-display-area {
+            flex-grow: 1;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+            border: 3px solid #663399 
+        }
+        
         iframe {
             width: 100%;
             height: 100%;
             border: none;
             overflow: hidden;
         }
+        iframe.app-frame { display: none; }
+        iframe.app-frame.active { display: block; }
 
-        /* Styles for the scroll arrow buttons (hidden on desktop by default) */
-        .scroll-arrow {
+        /* Minimum resolution message */
+        .min-resolution-message {
+            display: none;
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 5;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .min-resolution-message.active {
+            display: flex;
+        }
+
+        /* Tabs have a fixed width and sit next to the display area */
+        .tabs-container {
+	        flex-shrink: 0;
+	        width: calc(var(--block-size) * 1.1);
+	        height: 100%;
+	        display: flex;
+	        flex-direction: column;
+	        align-items: center;
+	        padding-top: calc(var(--block-size) * 0.63);
+	        box-sizing: border-box;
+	        transition: width 0.1s ease, padding-top 0.1s ease;
+	        padding-right: calc(var(--block-size) * 0.07);
+        }
+
+        .tab {
+            writing-mode: vertical-rl;
+            transform: rotate(0deg); /* Text reads from top to bottom */
+            cursor: pointer;
+            padding: calc(var(--block-size) * 0.5) calc(var(--block-size) * 0.17);
+            margin-bottom: calc(var(--block-size) * 0.33);
+            border-radius: 0 8px 8px 0; /* Rounded corners on right side, flat on left */
+            font-weight: bold;
+            font-size: calc(var(--block-size) * 0.53);
+            color: white;
+            background-color: #9A73C9;
+            transition: all 0.1s ease;
+            text-orientation: mixed; /* Keeps letters upright */
+        }
+        .tab.active {
+            background-color: #663399; 
+        }
+
+        /* --- Mobile UI Overlays and Scroll Arrows --- */
+        .scroll-arrow, .scroll-arrow-square, #gameControls {
+            position: absolute;
+            display: none;
+            z-index: 10;
+        }
+        .scroll-arrow {
             left: 0;
             width: 100%;
             height: 60px;
             background: rgba(0, 0, 0, 0.4);
-            display: none; /* Hidden on desktop */
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            z-index: 10;
-            transition: background-color 0.3s ease, opacity 0.3s ease;
         }
-
-        .scroll-arrow:hover {
-            background: rgba(0, 0, 0, 0.6);
-        }
-
         #scrollDownBtn { bottom: 0; }
-        #scrollUpBtn { top: 0; }
-
-        /* New square button for in-game state */
+        
         .scroll-arrow-square {
-            position: absolute;
             top: 15px;
             right: 15px;
             width: 50px;
             height: 50px;
+            border-radius: 8px;
             background: rgba(0, 0, 0, 0.4);
-            display: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            z-index: 10;
-            transition: background-color 0.3s ease;
-            border-radius: 8px;
         }
-        .scroll-arrow-square:hover {
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        /* Container for on-screen game controls */
         #gameControls {
-            position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
@@ -87,10 +157,7 @@
             display: none;
             justify-content: space-around;
             align-items: center;
-            z-index: 10;
         }
-
-        /* Individual on-screen control buttons */
         .control-btn {
             background: transparent;
             border: none;
@@ -101,33 +168,73 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.3s ease;
         }
-        .control-btn:not(:last-child) {
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .control-btn:active {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        .control-btn:not(:last-child) { border-right: 1px solid rgba(255, 255, 255, 0.2); }
+        .control-btn:active { background: rgba(255, 255, 255, 0.2); }
 
-        /* --- Media Query for Mobile Devices (768px or less) --- */
+        /* --- Media Query for Mobile Devices --- */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
                 overflow-y: scroll;
                 scroll-snap-type: y mandatory;
-                -webkit-overflow-scrolling: touch;
             }
-            .resume-container, .game-container {
+            .resume-container, .arcade-container {
                 flex: none;
                 width: 100%;
                 height: 100vh;
                 scroll-snap-align: start;
             }
-            .scroll-arrow {
-                display: flex;
+            .arcade-container {
+                padding: calc(var(--block-size) * 0.53) calc(var(--block-size) * 0.33) calc(var(--block-size) * 0.33) calc(var(--block-size) * 0.33);
+                background-color: #222;
+                overflow: auto;
             }
+            .game-unit {
+                flex-direction: column;
+                border-radius: 0;
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 100%;
+                max-height: 100%;
+                aspect-ratio: unset;
+                box-sizing: border-box;
+            }
+            .scroll-arrow, .scroll-arrow-square { display: flex; }
+            
+            .app-display-area {
+                order: 2; 
+                margin-top: -10px; /* This pulls the area up to create the overlap */
+                z-index: 2; /* This ensures the game area is on top */
+                max-height: 758px; /* Added max-height for mobile */
+                border: 3px solid #663399; 
+            }
+            
+            .tabs-container {
+                order: 1;
+                position: sticky;
+                top: 0;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: center;
+                background-color: #000;
+                padding: 13px 4px 4px !important;
+                z-index: 1;
+                box-sizing: border-box;
+            }
+
+            .tab {
+                writing-mode: horizontal-tb;
+                transform: none;
+                text-orientation: unset;
+                padding: 7px 17px;
+                margin: 0 3px; /* Removes bottom margin that creates a gap */
+                border-radius: 8px;
+            }
+
+            #gameControls { width: 100%; }
+            .scroll-arrow-square { right: 15px; } /* Reset position */
         }
     </style>
 </head>
@@ -139,78 +246,176 @@
         </div>
     </div>
     
-    <div class="game-container">
-        <iframe id="gameIframe" src="https://tetris-game-bo8x.onrender.com"></iframe>
-        <!-- Scroll up bar (pre-game) -->
-        <div id="scrollUpBtn" class="scroll-arrow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 14L12 9L7 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <!-- Square scroll up button (in-game) -->
-        <div id="inGameScrollUpBtn" class="scroll-arrow-square">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 14L12 9L7 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <!-- On-screen game controls (in-game) -->
-        <div id="gameControls">
-            <button class="control-btn" data-code="ArrowLeft"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 19L8 12L15 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <button class="control-btn" data-code="ArrowUp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 15L12 8L19 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <button class="control-btn" data-code="Space" style="font-size: 16px; font-weight: bold; font-family: sans-serif;">SPACE</button>
-            <button class="control-btn" data-code="ArrowDown"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <button class="control-btn" data-code="ArrowRight"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5L16 12L9 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="arcade-container">
+        <div class="game-unit">
+            <div class="app-display-area">
+                <div class="min-resolution-message" id="minResolutionMessage">
+                    <div>
+                        <h3>Screen Too Small</h3>
+                        <p>Please increase your browser window size to play this game.</p>
+                        <p>Minimum required resolution: 350x700</p>
+                    </div>
+                </div>
+                
+                <iframe id="blocks-iframe" class="app-frame" data-appid="blocks"></iframe>
+                <iframe id="invaders-iframe" class="app-frame" data-appid="invaders"></iframe>
+                <div id="scrollUpBtn" class="scroll-arrow-square">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 14L12 9L7 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div id="gameControls">
+                    <button class="control-btn" data-code="ArrowLeft"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 19L8 12L15 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    <button class="control-btn" data-code="ArrowUp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 15L12 8L19 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    <button class="control-btn" data-code="Space" style="font-size: 16px; font-weight: bold;">SPACE</button>
+                    <button class="control-btn" data-code="ArrowDown"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    <button class="control-btn" data-code="ArrowRight"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5L16 12L9 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                </div>
+            </div>
+            <div class="tabs-container">
+                <div class="tab active" data-appid="invaders">Invaders</div>
+                <div class="tab" data-appid="blocks">Blocks</div>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Easy Origin Switch ---
+            // Set to true when deploying to GitHub pages, false for local development
+            const IS_PRODUCTION = true;
+            const TARGET_ORIGIN = IS_PRODUCTION ? 'https://jamesworldbuilder.github.io' : '*';
+
+            const appConfig = {
+                'invaders': {
+                    url: 'https://space-invaders-game-4fnq.onrender.com',
+                    iframe: document.getElementById('invaders-iframe'),
+                    origin: TARGET_ORIGIN
+                },
+                'blocks': {
+                    url: 'https://tetris-game-bo8x.onrender.com', 
+                    iframe: document.getElementById('blocks-iframe'),
+                    origin: TARGET_ORIGIN
+                }
+            };
+            
+            // Changed initial app to invaders
+            let currentAppId = 'invaders';
+            const tabsContainer = document.querySelector('.tabs-container');
+            const allTabs = document.querySelectorAll('.tab');
+            const gameUnit = document.querySelector('.game-unit');
+            const root = document.documentElement;
+            const minResolutionMessage = document.getElementById('minResolutionMessage');
+            const appDisplayArea = document.querySelector('.app-display-area');
+
+            const minWidth = 299;
+            const minHeight = 558;
+
+            // Function to check and update resolution message based on app-display-area
+            function checkResolution() {
+                const displayAreaRect = appDisplayArea.getBoundingClientRect();
+                const displayAreaWidth = displayAreaRect.width;
+                const displayAreaHeight = displayAreaRect.height;
+                
+                // Show message if display area is too small
+                if (displayAreaWidth < minWidth || displayAreaHeight < minHeight) {
+                    minResolutionMessage.classList.add('active');
+                } else {
+                    minResolutionMessage.classList.remove('active');
+                }
+            }
+
+            window.addEventListener('message', (event) => {
+                const activeApp = appConfig[currentAppId];
+                // The origin check for receiving messages remains the same
+                if (!activeApp || (activeApp.origin !== '*' && event.origin !== 'null' && event.origin !== activeApp.origin)) {
+                    return;
+                }
+
+                if (event.data && event.data.type === 'canvasPosition') {
+                    // Set the CSS variable which drives all scaling
+                    root.style.setProperty('--block-size', `${event.data.blockSize}px`);
+
+                    // Check resolution after the display area might have changed
+                    setTimeout(checkResolution, 100);
+
+                    if (!window.matchMedia("(max-width: 768px)").matches) {
+                        const arcadeContainerRect = gameUnit.parentElement.getBoundingClientRect();
+                        const gameUnitHeight = (event.data.offsetWidth / 10) * 20;
+                        const spaceAboveGameUnit = (arcadeContainerRect.height - gameUnitHeight) / 2;
+                        const finalOffset = spaceAboveGameUnit + event.data.offsetTop;
+                        tabsContainer.style.paddingTop = `${Math.max(0, finalOffset)}px`;
+                    }
+                }
+
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                    if (event.data === 'gameStarted') {
+                        scrollUpBtn.style.display = 'flex';
+                        document.querySelector('#gameControls').style.display = 'flex';
+                    } else if (event.data === 'gameEnded') { 
+                        scrollUpBtn.style.display = 'flex';
+                        document.querySelector('#gameControls').style.display = 'none';
+                    }
+                }
+            });
+
+            // Check resolution on window resize and when switching apps
+            window.addEventListener('resize', checkResolution);
+            window.addEventListener('load', checkResolution);
+
+            function switchApp(newAppId) {
+                if (!appConfig[newAppId]) return;
+                const oldAppId = currentAppId;
+                if (oldAppId && appConfig[oldAppId]) {
+                    appConfig[oldAppId].iframe.classList.remove('active');
+                    appConfig[oldAppId].iframe.src = 'about:blank'; 
+                }
+                allTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.appid === newAppId));
+                const newApp = appConfig[newAppId];
+                newApp.iframe.src = newApp.url;
+                newApp.iframe.classList.add('active');
+                currentAppId = newAppId;
+                
+                // Check resolution after switching apps
+                setTimeout(checkResolution, 100);
+            }
+
+            tabsContainer.addEventListener('click', (event) => {
+                const clickedTab = event.target.closest('.tab');
+                if (clickedTab && clickedTab.dataset.appid !== currentAppId) {
+                    switchApp(clickedTab.dataset.appid);
+                }
+            });
+
             if (window.matchMedia("(max-width: 768px)").matches) {
                 const scrollDownBtn = document.getElementById('scrollDownBtn');
-                const scrollUpBtn = document.getElementById('scrollUpBtn');
-                const inGameScrollUpBtn = document.getElementById('inGameScrollUpBtn');
-                const gameControls = document.getElementById('gameControls');
-                const gameIframe = document.getElementById('gameIframe');
-                const gameContainer = document.querySelector('.game-container');
+                const arcadeContainer = document.querySelector('.arcade-container');
                 const resumeContainer = document.querySelector('.resume-container');
-                
-                const gameOrigin = "https://tetris-game-bo8x.onrender.com";
-
-                const scrollToGame = () => gameContainer.scrollIntoView({ behavior: 'smooth' });
+                const scrollToGame = () => arcadeContainer.scrollIntoView({ behavior: 'smooth' });
                 const scrollToResume = () => resumeContainer.scrollIntoView({ behavior: 'smooth' });
 
                 scrollDownBtn.addEventListener('click', scrollToGame);
-                scrollUpBtn.addEventListener('click', scrollToResume);
-                inGameScrollUpBtn.addEventListener('click', scrollToResume);
 
-                // Send key press messages to the iframe when control buttons are pressed
-                gameControls.addEventListener('click', (event) => {
+                const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                scrollUpBtn.addEventListener('click', scrollToResume);
+                
+                document.querySelector('#gameControls').addEventListener('click', (event) => {
                     const button = event.target.closest('.control-btn');
-                    if (button && button.dataset.code) {
+                    const activeApp = appConfig[currentAppId];
+                    if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active')) {
                         const message = { type: 'keydown', code: button.dataset.code };
-                        gameIframe.contentWindow.postMessage(message, gameOrigin);
-                        
+                        // The postMessage call will now use the dynamic origin from appConfig
+                        activeApp.iframe.contentWindow.postMessage(message, activeApp.origin);
                         setTimeout(() => {
                             const upMessage = { type: 'keyup', code: button.dataset.code };
-                            gameIframe.contentWindow.postMessage(upMessage, gameOrigin);
+                            activeApp.iframe.contentWindow.postMessage(upMessage, activeApp.origin);
                         }, 100);
                     }
                 });
-
-                // Listen for messages from the iframe to toggle UI controls
-                window.addEventListener('message', (event) => {
-                    // Security check to ensure messages only come from the game URL
-                    if (event.origin !== gameOrigin) {
-                        return; // Ignore messages from other origins
-                    }
-                    
-                    if (event.data === 'gameStarted') {
-                        scrollUpBtn.style.display = 'none';
-                        inGameScrollUpBtn.style.display = 'flex';
-                        gameControls.style.display = 'flex';
-                    } else if (event.data === 'gameEnded') { 
-                        scrollUpBtn.style.display = 'flex';
-                        inGameScrollUpBtn.style.display = 'none';
-                        gameControls.style.display = 'none';
-                    }
-                });
             }
+
+            // Initial resolution check
+            setTimeout(checkResolution, 500);
+            switchApp(currentAppId);
         });
     </script>
 </body>
