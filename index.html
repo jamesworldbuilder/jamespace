@@ -208,6 +208,7 @@
                 z-index: 2; /* This ensures the game area is on top */
                 max-height: 758px; /* Added max-height for mobile */
                 border: 3px solid #663399; 
+                background-color: #000;
             }
             
             .tabs-container {
@@ -276,55 +277,119 @@
             </div>
         </div>
     </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             // --- Easy Origin Switch ---
             // Set to true when deploying to GitHub pages, false for local development
-            const IS_PRODUCTION = true;
-            const TARGET_ORIGIN = IS_PRODUCTION ? 'https://jamesworldbuilder.github.io' : '*';
+            var IS_PRODUCTION = true;
+            var TARGET_ORIGIN = IS_PRODUCTION ? 'https://jamesworldbuilder.github.io' : '*';
 
-            const appConfig = {
+            var appConfig = {
                 'invaders': {
-                    url: 'https://space-invaders-game-4fnq.onrender.com',
+                    url: 'https://space-invaders-game-4fnq.onrender.com', 
                     iframe: document.getElementById('invaders-iframe'),
-                    origin: TARGET_ORIGIN
+                    origin: TARGET_ORIGIN,
+                    isLoaded: false
                 },
                 'blocks': {
                     url: 'https://tetris-game-bo8x.onrender.com', 
                     iframe: document.getElementById('blocks-iframe'),
-                    origin: TARGET_ORIGIN
+                    origin: TARGET_ORIGIN,
+                    isLoaded: false
                 }
             };
             
-            // Changed initial app to invaders
-            let currentAppId = 'invaders';
-            const tabsContainer = document.querySelector('.tabs-container');
-            const allTabs = document.querySelectorAll('.tab');
-            const gameUnit = document.querySelector('.game-unit');
-            const root = document.documentElement;
-            const minResolutionMessage = document.getElementById('minResolutionMessage');
-            const appDisplayArea = document.querySelector('.app-display-area');
+            var currentAppId = 'invaders';
+            var tabsContainer = document.querySelector('.tabs-container');
+            var allTabs = document.querySelectorAll('.tab');
+            var gameUnit = document.querySelector('.game-unit');
+            var root = document.documentElement;
+            var minResolutionMessage = document.getElementById('minResolutionMessage');
+            var appDisplayArea = document.querySelector('.app-display-area');
 
-            const minWidth = 299;
-            const minHeight = 558;
+            var minWidth = 350;
+            var minHeight = 700;
+
+            // Track if resolution is currently too small
+            var isResolutionTooSmall = false;
+            var resizeTimeout;
 
             // Function to check and update resolution message based on app-display-area
             function checkResolution() {
-                const displayAreaRect = appDisplayArea.getBoundingClientRect();
-                const displayAreaWidth = displayAreaRect.width;
-                const displayAreaHeight = displayAreaRect.height;
+                // Skip resolution checks on mobile devices
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    minResolutionMessage.classList.remove('active');
+                    isResolutionTooSmall = false;
+                    return;
+                }
+
+                var displayAreaRect = appDisplayArea.getBoundingClientRect();
+                var displayAreaWidth = displayAreaRect.width;
+                var displayAreaHeight = displayAreaRect.height;
                 
-                // Show message if display area is too small
+                var wasTooSmall = isResolutionTooSmall;
+                
+                // Show minimum resolution message if display area is too small (desktop only)
                 if (displayAreaWidth < minWidth || displayAreaHeight < minHeight) {
                     minResolutionMessage.classList.add('active');
+                    isResolutionTooSmall = true;
+                    
+                    // If resolution becomes too small, unload iframes
+                    if (!wasTooSmall) {
+                        unloadAllIframes();
+                    }
                 } else {
                     minResolutionMessage.classList.remove('active');
+                    isResolutionTooSmall = false;
+                    
+                    // If resolution becomes adequate, reload current app
+                    if (wasTooSmall) {
+                        reloadCurrentApp();
+                    }
                 }
             }
 
-            window.addEventListener('message', (event) => {
-                const activeApp = appConfig[currentAppId];
+            // Function to unload all iframes when resolution is too small
+            function unloadAllIframes() {
+                for (var appId in appConfig) {
+                    var app = appConfig[appId];
+                    if (app.isLoaded) {
+                        // Replace iframe with a blank page to stop execution
+                        app.iframe.src = 'about:blank';
+                        app.isLoaded = false;
+                    }
+                }
+            }
+
+            // Function to unload a specific app
+            function unloadApp(appId) {
+                var app = appConfig[appId];
+                if (app && app.isLoaded) {
+                    app.iframe.src = 'about:blank';
+                    app.isLoaded = false;
+                }
+            }
+
+            // Function to reload the current app
+            function reloadCurrentApp() {
+                var currentApp = appConfig[currentAppId];
+                if (currentApp && !currentApp.isLoaded) {
+                    currentApp.iframe.src = currentApp.url;
+                    currentApp.isLoaded = true;
+                }
+            }
+
+            // Function to load a specific app
+            function loadApp(appId) {
+                var app = appConfig[appId];
+                if (app && !app.isLoaded && !isResolutionTooSmall) {
+                    app.iframe.src = app.url;
+                    app.isLoaded = true;
+                }
+            }
+
+            window.addEventListener('message', function(event) {
+                var activeApp = appConfig[currentAppId];
                 // The origin check for receiving messages remains the same
                 if (!activeApp || (activeApp.origin !== '*' && event.origin !== 'null' && event.origin !== activeApp.origin)) {
                     return;
@@ -332,22 +397,28 @@
 
                 if (event.data && event.data.type === 'canvasPosition') {
                     // Set the CSS variable which drives all scaling
-                    root.style.setProperty('--block-size', `${event.data.blockSize}px`);
+                    root.style.setProperty('--block-size', event.data.blockSize + 'px');
 
                     // Check resolution after the display area might have changed
-                    setTimeout(checkResolution, 100);
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(checkResolution, 100);
 
                     if (!window.matchMedia("(max-width: 768px)").matches) {
-                        const arcadeContainerRect = gameUnit.parentElement.getBoundingClientRect();
-                        const gameUnitHeight = (event.data.offsetWidth / 10) * 20;
-                        const spaceAboveGameUnit = (arcadeContainerRect.height - gameUnitHeight) / 2;
-                        const finalOffset = spaceAboveGameUnit + event.data.offsetTop;
-                        tabsContainer.style.paddingTop = `${Math.max(0, finalOffset)}px`;
+                        var arcadeContainerRect = gameUnit.parentElement.getBoundingClientRect();
+                        var gameUnitHeight = (event.data.offsetWidth / 10) * 20;
+                        var spaceAboveGameUnit = (arcadeContainerRect.height - gameUnitHeight) / 2;
+                        var finalOffset = spaceAboveGameUnit + event.data.offsetTop;
+                        tabsContainer.style.paddingTop = Math.max(0, finalOffset) + 'px';
                     }
                 }
 
+                // Mark app as loaded when it sends messages
+                if (activeApp && !activeApp.isLoaded) {
+                    activeApp.isLoaded = true;
+                }
+
                 if (window.matchMedia("(max-width: 768px)").matches) {
-                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                    var scrollUpBtn = document.querySelector('#scrollUpBtn');
                     if (event.data === 'gameStarted') {
                         scrollUpBtn.style.display = 'flex';
                         document.querySelector('#gameControls').style.display = 'flex';
@@ -358,64 +429,82 @@
                 }
             });
 
-            // Check resolution on window resize and when switching apps
-            window.addEventListener('resize', checkResolution);
+            // Check resolution on window resize
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(checkResolution, 250);
+            });
+            
             window.addEventListener('load', checkResolution);
 
             function switchApp(newAppId) {
                 if (!appConfig[newAppId]) return;
-                const oldAppId = currentAppId;
-                if (oldAppId && appConfig[oldAppId]) {
+                
+                var oldAppId = currentAppId;
+                
+                // Unload the currently active app if it's different from the new one
+                if (oldAppId && oldAppId !== newAppId && appConfig[oldAppId]) {
+                    unloadApp(oldAppId);
                     appConfig[oldAppId].iframe.classList.remove('active');
-                    appConfig[oldAppId].iframe.src = 'about:blank'; 
                 }
-                allTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.appid === newAppId));
-                const newApp = appConfig[newAppId];
-                newApp.iframe.src = newApp.url;
+                
+                allTabs.forEach(function(tab) {
+                    tab.classList.toggle('active', tab.dataset.appid === newAppId);
+                });
+                
+                var newApp = appConfig[newAppId];
                 newApp.iframe.classList.add('active');
                 currentAppId = newAppId;
+                
+                // Only load the app if resolution is adequate (or on mobile)
+                if (!isResolutionTooSmall || window.matchMedia("(max-width: 768px)").matches) {
+                    loadApp(newAppId);
+                }
                 
                 // Check resolution after switching apps
                 setTimeout(checkResolution, 100);
             }
 
-            tabsContainer.addEventListener('click', (event) => {
-                const clickedTab = event.target.closest('.tab');
+            tabsContainer.addEventListener('click', function(event) {
+                var clickedTab = event.target.closest('.tab');
                 if (clickedTab && clickedTab.dataset.appid !== currentAppId) {
                     switchApp(clickedTab.dataset.appid);
                 }
             });
 
             if (window.matchMedia("(max-width: 768px)").matches) {
-                const scrollDownBtn = document.getElementById('scrollDownBtn');
-                const arcadeContainer = document.querySelector('.arcade-container');
-                const resumeContainer = document.querySelector('.resume-container');
-                const scrollToGame = () => arcadeContainer.scrollIntoView({ behavior: 'smooth' });
-                const scrollToResume = () => resumeContainer.scrollIntoView({ behavior: 'smooth' });
+                var scrollDownBtn = document.getElementById('scrollDownBtn');
+                var arcadeContainer = document.querySelector('.arcade-container');
+                var resumeContainer = document.querySelector('.resume-container');
+                var scrollToGame = function() { arcadeContainer.scrollIntoView({ behavior: 'smooth' }); };
+                var scrollToResume = function() { resumeContainer.scrollIntoView({ behavior: 'smooth' }); };
 
                 scrollDownBtn.addEventListener('click', scrollToGame);
 
-                const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                var scrollUpBtn = document.querySelector('#scrollUpBtn');
                 scrollUpBtn.addEventListener('click', scrollToResume);
                 
-                document.querySelector('#gameControls').addEventListener('click', (event) => {
-                    const button = event.target.closest('.control-btn');
-                    const activeApp = appConfig[currentAppId];
-                    if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active')) {
-                        const message = { type: 'keydown', code: button.dataset.code };
-                        // The postMessage call will now use the dynamic origin from appConfig
+                document.querySelector('#gameControls').addEventListener('click', function(event) {
+                    var button = event.target.closest('.control-btn');
+                    var activeApp = appConfig[currentAppId];
+                    if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active') && activeApp.isLoaded) {
+                        var message = { type: 'keydown', code: button.dataset.code };
                         activeApp.iframe.contentWindow.postMessage(message, activeApp.origin);
-                        setTimeout(() => {
-                            const upMessage = { type: 'keyup', code: button.dataset.code };
+                        setTimeout(function() {
+                            var upMessage = { type: 'keyup', code: button.dataset.code };
                             activeApp.iframe.contentWindow.postMessage(upMessage, activeApp.origin);
                         }, 100);
                     }
                 });
             }
-
-            // Initial resolution check
-            setTimeout(checkResolution, 500);
-            switchApp(currentAppId);
+            // Initial resolution check and app load
+            setTimeout(function() {
+                checkResolution();
+                // Always load app on mobile, only load if resolution is adequate on desktop
+                if (!isResolutionTooSmall || window.matchMedia("(max-width: 768px)").matches) {
+                    switchApp(currentAppId);
+                }
+            }, 500);
         });
     </script>
 </body>
