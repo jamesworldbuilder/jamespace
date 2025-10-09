@@ -101,7 +101,6 @@
 	        transition: width 0.1s ease, padding-top 0.1s ease;
 	        padding-right: calc(var(--block-size) * 0.07);
         }
-
         .tab {
             writing-mode: vertical-rl;
             transform: rotate(0deg); /* Text reads from top to bottom */
@@ -236,8 +235,14 @@
                 border-radius: 8px;
             }
 
-            #gameControls { width: 100%; }
-            .scroll-arrow-square { right: 15px; } /* Reset position */
+            #gameControls { 
+                width: 100%; 
+                display: flex !important; /* Force display on mobile */
+            }
+            .scroll-arrow-square { 
+                right: 15px; 
+                display: flex !important; /* Force display on mobile */
+            }
         }
     </style>
 </head>
@@ -316,6 +321,9 @@
             var isResolutionTooSmall = false;
             var resizeTimeout;
 
+            // Track game state for mobile controls
+            var isGameActive = false;
+
             // Function to check and update resolution message based on app-display-area
             function checkResolution() {
                 // Skip resolution checks on mobile devices
@@ -393,30 +401,49 @@
             // Function to show mobile controls
             function showMobileControls() {
                 if (window.matchMedia("(max-width: 768px)").matches) {
-                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
                     const gameControls = document.querySelector('#gameControls');
-                    scrollUpBtn.style.display = 'flex';
                     gameControls.style.display = 'flex';
+                    isGameActive = true;
                 }
             }
 
             // Function to hide mobile controls
             function hideMobileControls() {
                 if (window.matchMedia("(max-width: 768px)").matches) {
-                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
                     const gameControls = document.querySelector('#gameControls');
-                    scrollUpBtn.style.display = 'flex';
                     gameControls.style.display = 'none';
+                    isGameActive = false;
+                }
+            }
+
+            // Function to manually trigger controls (for testing/debugging)
+            function toggleMobileControls() {
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    if (isGameActive) {
+                        hideMobileControls();
+                    } else {
+                        showMobileControls();
+                    }
                 }
             }
 
             window.addEventListener('message', function(event) {
                 const activeApp = appConfig[currentAppId];
 
-                // Validate origin
-                if (!activeApp || (activeApp.origin !== '*' && event.origin !== 'null' && event.origin !== activeApp.origin)) {
+                // Validate origin - be more permissive for external games
+                if (!activeApp) return;
+                
+                // Flexible origin checking for external URLs
+                const isValidOrigin = activeApp.origin === '*' || 
+                                    event.origin === 'null' || 
+                                    event.origin === activeApp.origin ||
+                                    event.origin.includes('onrender.com');
+
+                if (!isValidOrigin) {
                     return;
                 }
+
+                console.log('Received message from game:', event.data, 'from origin:', event.origin);
 
                 // Block size updates and scaling logic
                 if (event.data && event.data.type === 'canvasPosition') {
@@ -441,16 +468,16 @@
 
                 // --- Mobile-specific behavior ---
                 // Show controls when iframe sends "startButtonPressed" or "gameStarted"
-                if (event.data === 'startButtonPressed' || event.data === 'gameStarted') {
+                if (event.data === 'startButtonPressed' || event.data === 'gameStarted' || 
+                    (event.data && event.data.gameState === 'started')) {
                     showMobileControls();
                 }
 
                 // Hide controls when iframe sends "gameEnded"
-                if (event.data === 'gameEnded') {
+                if (event.data === 'gameEnded' || (event.data && event.data.gameState === 'ended')) {
                     hideMobileControls();
                 }
             });
-
 
             // Check resolution on window resize
             window.addEventListener('resize', function() {
@@ -503,10 +530,11 @@
                 const activeApp = appConfig[currentAppId];
                 if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active') && activeApp.isLoaded) {
                     const message = { type: 'keydown', code: button.dataset.code };
-                    activeApp.iframe.contentWindow.postMessage(message, activeApp.origin);
+                    // Use '*' as origin for external games to avoid CORS issues
+                    activeApp.iframe.contentWindow.postMessage(message, '*');
                     setTimeout(() => {
                         const upMessage = { type: 'keyup', code: button.dataset.code };
-                        activeApp.iframe.contentWindow.postMessage(upMessage, activeApp.origin);
+                        activeApp.iframe.contentWindow.postMessage(upMessage, '*');
                     }, 100);
                 }
             });
@@ -529,6 +557,22 @@
 
                 scrollUpBtn.addEventListener('click', () => {
                     resumeContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+
+                // Add double-tap to toggle controls for debugging
+                let tapCount = 0;
+                let tapTimer;
+                appDisplayArea.addEventListener('click', function(e) {
+                    tapCount++;
+                    if (tapCount === 1) {
+                        tapTimer = setTimeout(function() {
+                            tapCount = 0;
+                        }, 300);
+                    } else if (tapCount === 2) {
+                        clearTimeout(tapTimer);
+                        tapCount = 0;
+                        toggleMobileControls();
+                    }
                 });
 
                 // Initially hide controls on mobile (show when game starts)
