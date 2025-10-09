@@ -148,7 +148,6 @@
             align-items: center;
             cursor: pointer;
         }
-		
         #gameControls {
             bottom: 0;
             left: 0;
@@ -284,18 +283,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- Easy Origin Switch ---
             // Set to true when deploying to GitHub pages, false for local development
-            var IS_PRODUCTION = true;
+            var IS_PRODUCTION = false;
             var TARGET_ORIGIN = IS_PRODUCTION ? 'https://jamesworldbuilder.github.io' : '*';
 
             var appConfig = {
                 'invaders': {
-                    url: 'https://space-invaders-game-4fnq.onrender.com', 
+                    url: './Render_Cloud_setup/space-invaders-game/space-invaders-game.html', //https://space-invaders-game-4fnq.onrender.com
                     iframe: document.getElementById('invaders-iframe'),
                     origin: TARGET_ORIGIN,
                     isLoaded: false
                 },
                 'blocks': {
-                    url: 'https://tetris-game-bo8x.onrender.com', 
+                    url: './Render_Cloud_setup/tetris-game/tetris-game.html', //https://tetris-game-bo8x.onrender.com
                     iframe: document.getElementById('blocks-iframe'),
                     origin: TARGET_ORIGIN,
                     isLoaded: false
@@ -329,7 +328,7 @@
                 var displayAreaRect = appDisplayArea.getBoundingClientRect();
                 var displayAreaWidth = displayAreaRect.width;
                 var displayAreaHeight = displayAreaRect.height;
-				
+                
                 var wasTooSmall = isResolutionTooSmall;
                 
                 // Show minimum resolution message if display area is too small (desktop only)
@@ -391,6 +390,26 @@
                 }
             }
 
+            // Function to show mobile controls
+            function showMobileControls() {
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                    const gameControls = document.querySelector('#gameControls');
+                    scrollUpBtn.style.display = 'flex';
+                    gameControls.style.display = 'flex';
+                }
+            }
+
+            // Function to hide mobile controls
+            function hideMobileControls() {
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                    const gameControls = document.querySelector('#gameControls');
+                    scrollUpBtn.style.display = 'flex';
+                    gameControls.style.display = 'none';
+                }
+            }
+
             window.addEventListener('message', function(event) {
                 const activeApp = appConfig[currentAppId];
 
@@ -421,23 +440,17 @@
                 }
 
                 // --- Mobile-specific behavior ---
-                if (window.matchMedia("(max-width: 768px)").matches) {
-                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
-                    const gameControls = document.querySelector('#gameControls');
+                // Show controls when iframe sends "startButtonPressed" or "gameStarted"
+                if (event.data === 'startButtonPressed' || event.data === 'gameStarted') {
+                    showMobileControls();
+                }
 
-                    // Show controls when iframe sends "startButtonPressed"
-                    if (event.data === 'startButtonPressed' || event.data === 'gameStarted') {
-                        scrollUpBtn.style.display = 'flex';
-                        gameControls.style.display = 'flex';
-                    }
-
-                    // Hide controls when iframe sends "gameEnded"
-                    if (event.data === 'gameEnded') {
-                        scrollUpBtn.style.display = 'flex';
-                        gameControls.style.display = 'none';
-                    }
+                // Hide controls when iframe sends "gameEnded"
+                if (event.data === 'gameEnded') {
+                    hideMobileControls();
                 }
             });
+
 
             // Check resolution on window resize
             window.addEventListener('resize', function() {
@@ -456,6 +469,8 @@
                 if (oldAppId && oldAppId !== newAppId && appConfig[oldAppId]) {
                     unloadApp(oldAppId);
                     appConfig[oldAppId].iframe.classList.remove('active');
+                    // Hide controls when switching apps
+                    hideMobileControls();
                 }
                 
                 allTabs.forEach(function(tab) {
@@ -482,6 +497,20 @@
                 }
             });
 
+            // Game controls event listener - Setup regardless of device
+            document.querySelector('#gameControls').addEventListener('click', function(event) {
+                const button = event.target.closest('.control-btn');
+                const activeApp = appConfig[currentAppId];
+                if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active') && activeApp.isLoaded) {
+                    const message = { type: 'keydown', code: button.dataset.code };
+                    activeApp.iframe.contentWindow.postMessage(message, activeApp.origin);
+                    setTimeout(() => {
+                        const upMessage = { type: 'keyup', code: button.dataset.code };
+                        activeApp.iframe.contentWindow.postMessage(upMessage, activeApp.origin);
+                    }, 100);
+                }
+            });
+
             if (window.matchMedia("(max-width: 768px)").matches) {
                 const scrollDownBtn = document.getElementById('scrollDownBtn');
                 const scrollUpBtn = document.getElementById('scrollUpBtn');
@@ -502,18 +531,8 @@
                     resumeContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
 
-                document.querySelector('#gameControls').addEventListener('click', function(event) {
-                    const button = event.target.closest('.control-btn');
-                    const activeApp = appConfig[currentAppId];
-                    if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active') && activeApp.isLoaded) {
-                        const message = { type: 'keydown', code: button.dataset.code };
-                        activeApp.iframe.contentWindow.postMessage(message, activeApp.origin);
-                        setTimeout(() => {
-                            const upMessage = { type: 'keyup', code: button.dataset.code };
-                            activeApp.iframe.contentWindow.postMessage(upMessage, activeApp.origin);
-                        }, 100);
-                    }
-                });
+                // Initially hide controls on mobile (show when game starts)
+                hideMobileControls();
             }
 
             // Initial resolution check and app load
