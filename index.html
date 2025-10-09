@@ -148,29 +148,32 @@
             align-items: center;
             cursor: pointer;
         }
+		
         #gameControls {
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 80px;
+            height: 47px;
             background: rgba(0, 0, 0, 0.4);
             display: none;
             justify-content: space-around;
             align-items: center;
         }
-        .control-btn {
+        #gameControls .control-btn {
+            width: 45px;          
+            height: 45px;         
+            font-size: 0.5rem;
             background: transparent;
             border: none;
             color: white;
             flex-grow: 1;
-            height: 100%;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+        .control-btn:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.2); }
         .control-btn:not(:last-child) { border-right: 1px solid rgba(255, 255, 255, 0.2); }
-        .control-btn:active { background: rgba(255, 255, 255, 0.2); }
 
         /* --- Media Query for Mobile Devices --- */
         @media (max-width: 768px) {
@@ -206,7 +209,7 @@
                 order: 2; 
                 margin-top: -10px; /* This pulls the area up to create the overlap */
                 z-index: 2; /* This ensures the game area is on top */
-                max-height: 758px; /* Added max-height for mobile */
+                max-height: 758px; 
                 border: 3px solid #663399; 
                 background-color: #000;
             }
@@ -266,7 +269,7 @@
                 <div id="gameControls">
                     <button class="control-btn" data-code="ArrowLeft"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 19L8 12L15 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                     <button class="control-btn" data-code="ArrowUp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 15L12 8L19 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                    <button class="control-btn" data-code="Space" style="font-size: 16px; font-weight: bold;">SPACE</button>
+                    <button class="control-btn" data-code="Space" style="font-size: 16px; font-weight: bold;">□</button>
                     <button class="control-btn" data-code="ArrowDown"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                     <button class="control-btn" data-code="ArrowRight"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5L16 12L9 19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
@@ -281,18 +284,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- Easy Origin Switch ---
             // Set to true when deploying to GitHub pages, false for local development
-            var IS_PRODUCTION = true;
+            var IS_PRODUCTION = false;
             var TARGET_ORIGIN = IS_PRODUCTION ? 'https://jamesworldbuilder.github.io' : '*';
 
             var appConfig = {
                 'invaders': {
-                    url: 'https://space-invaders-game-4fnq.onrender.com', 
+                    url: './Render_Cloud_setup/space-invaders-game/space-invaders-game.html', //https://space-invaders-game-4fnq.onrender.com
                     iframe: document.getElementById('invaders-iframe'),
                     origin: TARGET_ORIGIN,
                     isLoaded: false
                 },
                 'blocks': {
-                    url: 'https://tetris-game-bo8x.onrender.com', 
+                    url: './Render_Cloud_setup/tetris-game/tetris-game.html', //https://tetris-game-bo8x.onrender.com
                     iframe: document.getElementById('blocks-iframe'),
                     origin: TARGET_ORIGIN,
                     isLoaded: false
@@ -326,7 +329,7 @@
                 var displayAreaRect = appDisplayArea.getBoundingClientRect();
                 var displayAreaWidth = displayAreaRect.width;
                 var displayAreaHeight = displayAreaRect.height;
-                
+				
                 var wasTooSmall = isResolutionTooSmall;
                 
                 // Show minimum resolution message if display area is too small (desktop only)
@@ -389,25 +392,25 @@
             }
 
             window.addEventListener('message', function(event) {
-                var activeApp = appConfig[currentAppId];
-                // The origin check for receiving messages remains the same
+                const activeApp = appConfig[currentAppId];
+
+                // Validate origin
                 if (!activeApp || (activeApp.origin !== '*' && event.origin !== 'null' && event.origin !== activeApp.origin)) {
                     return;
                 }
 
+                // Block size updates and scaling logic
                 if (event.data && event.data.type === 'canvasPosition') {
-                    // Set the CSS variable which drives all scaling
                     root.style.setProperty('--block-size', event.data.blockSize + 'px');
 
-                    // Check resolution after the display area might have changed
                     clearTimeout(resizeTimeout);
                     resizeTimeout = setTimeout(checkResolution, 100);
 
                     if (!window.matchMedia("(max-width: 768px)").matches) {
-                        var arcadeContainerRect = gameUnit.parentElement.getBoundingClientRect();
-                        var gameUnitHeight = (event.data.offsetWidth / 10) * 20;
-                        var spaceAboveGameUnit = (arcadeContainerRect.height - gameUnitHeight) / 2;
-                        var finalOffset = spaceAboveGameUnit + event.data.offsetTop;
+                        const arcadeContainerRect = gameUnit.parentElement.getBoundingClientRect();
+                        const gameUnitHeight = (event.data.offsetWidth / 10) * 20;
+                        const spaceAboveGameUnit = (arcadeContainerRect.height - gameUnitHeight) / 2;
+                        const finalOffset = spaceAboveGameUnit + event.data.offsetTop;
                         tabsContainer.style.paddingTop = Math.max(0, finalOffset) + 'px';
                     }
                 }
@@ -417,14 +420,21 @@
                     activeApp.isLoaded = true;
                 }
 
+                // --- Mobile-specific behavior ---
                 if (window.matchMedia("(max-width: 768px)").matches) {
-                    var scrollUpBtn = document.querySelector('#scrollUpBtn');
-                    if (event.data === 'gameStarted') {
+                    const scrollUpBtn = document.querySelector('#scrollUpBtn');
+                    const gameControls = document.querySelector('#gameControls');
+
+                    // Show controls when iframe sends "startButtonPressed"
+                    if (event.data === 'startButtonPressed' || event.data === 'gameStarted') {
                         scrollUpBtn.style.display = 'flex';
-                        document.querySelector('#gameControls').style.display = 'flex';
-                    } else if (event.data === 'gameEnded') { 
+                        gameControls.style.display = 'flex';
+                    }
+
+                    // Hide controls when iframe sends "gameEnded"
+                    if (event.data === 'gameEnded') {
                         scrollUpBtn.style.display = 'flex';
-                        document.querySelector('#gameControls').style.display = 'none';
+                        gameControls.style.display = 'none';
                     }
                 }
             });
@@ -473,30 +483,39 @@
             });
 
             if (window.matchMedia("(max-width: 768px)").matches) {
-                var scrollDownBtn = document.getElementById('scrollDownBtn');
-                var arcadeContainer = document.querySelector('.arcade-container');
-                var resumeContainer = document.querySelector('.resume-container');
-                var scrollToGame = function() { arcadeContainer.scrollIntoView({ behavior: 'smooth' }); };
-                var scrollToResume = function() { resumeContainer.scrollIntoView({ behavior: 'smooth' }); };
+                const scrollDownBtn = document.getElementById('scrollDownBtn');
+                const scrollUpBtn = document.getElementById('scrollUpBtn');
+                const arcadeContainer = document.querySelector('.arcade-container');
+                const resumeContainer = document.querySelector('.resume-container');
 
-                scrollDownBtn.addEventListener('click', scrollToGame);
+                // Enable scroll snapping on the body
+                document.body.style.scrollSnapType = 'y mandatory';
+                resumeContainer.style.scrollSnapAlign = 'start';
+                arcadeContainer.style.scrollSnapAlign = 'start';
 
-                var scrollUpBtn = document.querySelector('#scrollUpBtn');
-                scrollUpBtn.addEventListener('click', scrollToResume);
-                
+                // Scroll with snap alignment
+                scrollDownBtn.addEventListener('click', () => {
+                    arcadeContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+
+                scrollUpBtn.addEventListener('click', () => {
+                    resumeContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+
                 document.querySelector('#gameControls').addEventListener('click', function(event) {
-                    var button = event.target.closest('.control-btn');
-                    var activeApp = appConfig[currentAppId];
+                    const button = event.target.closest('.control-btn');
+                    const activeApp = appConfig[currentAppId];
                     if (button && button.dataset.code && activeApp && activeApp.iframe.classList.contains('active') && activeApp.isLoaded) {
-                        var message = { type: 'keydown', code: button.dataset.code };
+                        const message = { type: 'keydown', code: button.dataset.code };
                         activeApp.iframe.contentWindow.postMessage(message, activeApp.origin);
-                        setTimeout(function() {
-                            var upMessage = { type: 'keyup', code: button.dataset.code };
+                        setTimeout(() => {
+                            const upMessage = { type: 'keyup', code: button.dataset.code };
                             activeApp.iframe.contentWindow.postMessage(upMessage, activeApp.origin);
                         }, 100);
                     }
                 });
             }
+
             // Initial resolution check and app load
             setTimeout(function() {
                 checkResolution();
