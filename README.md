@@ -5,19 +5,7 @@
 I am detail-oriented and hard-working. I’m a computer guy who can do physical labor. My educational background and personal interests are in video game development. I have 5+ years of warehouse and floor experience working in retail. I have 5+ years of experience working as an auditor and front-desk clerk in hospitality. I have 5 years of remote-work experience in the web compliance industry, performing search-ad analysis, web-crawler systems optimizations, and 1 year of experience in website back-end testing.
 
 ### KNOWLEDGE BASE
-**Experienced with cross-platform word processors:** *Microsoft Word, Google Docs, LibreOffice Writer* 
-
-**Experienced with cross-platform spreadsheet tools:** *Microsoft Excel, Google Sheets, LibreOffice Calc* 
-
-**Comfortable working in multiple operating systems:** *Microsoft Windows, macOS, Linux* 
-
-**Familiar with industry-standard Property Management System (PMS) software:** *OperaPMS, RDPWin, SynXis* 
-
-**Familiar with a diverse range of professional skills:** 
-- **Administrative & Analytical:** *Data Entry, Data Analysis, Documentation, Record Keeping, Organization, Improvisation* 
-- **Technical & Web-based:** *Coding, Exploratory Testing, Affiliate Marketing, Web Compliance* 
-- **Customer-Facing & Support Roles:** *Customer Support, Technical Support, Point of Sale (POS) Systems, Cashiering* 
-- **Operational & Manual Work:** *Warehouse Operations, Auditing, Inventory Management, Housekeeping, Dishwashing, Cleaning, Third-Party Relationship Management*
+**Experienced with cross-platform word processors:** *Microsoft Word, Google Docs, LibreOffice Writer* **Experienced with cross-platform spreadsheet tools:** *Microsoft Excel, Google Sheets, LibreOffice Calc* **Comfortable working in multiple operating systems:** *Microsoft Windows, macOS, Linux* **Familiar with industry-standard Property Management System (PMS) software:** *OperaPMS, RDPWin, SynXis* **Familiar with a diverse range of professional skills:** - **Administrative & Analytical:** *Data Entry, Data Analysis, Documentation, Record Keeping, Organization, Improvisation* - **Technical & Web-based:** *Coding, Exploratory Testing, Affiliate Marketing, Web Compliance* - **Customer-Facing & Support Roles:** *Customer Support, Technical Support, Point of Sale (POS) Systems, Cashiering* - **Operational & Manual Work:** *Warehouse Operations, Auditing, Inventory Management, Housekeeping, Dishwashing, Cleaning, Third-Party Relationship Management*
 
 **Familiar with a range of programming and scripting languages:** 
 - **Automation & Pattern-Matching:** *Bash, Python, Git, Regex*  
@@ -82,5 +70,7 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 - **AWS Cloud Practitioner Essentials Certificate** (Completed Feb. 24, 2026)  
 - **TABC Seller-Server Certification** (Completed May 13, 2026)  
 - **National Food-Handler Certification** (Completed May 14, 2026)  
+- **COVID-19 Awareness Certification** (Completed May 24, 2026)  
+- **Active Shooter Awareness Certification** (Completed May 24, 2026)  
 - **Self-taught**
  
