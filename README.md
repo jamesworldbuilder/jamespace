@@ -67,11 +67,11 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 
 ### EDUCATION
 - **Associate of Applied Science Degree in Simulation & Game Design** > *Guilford Technical Community College, Jamestown, NC* (Class of 2016)  
-- [**AWS Cloud Practitioner Essentials Certificate**](https://aws.amazon.com/certification/certified-cloud-practitioner/) (Completed Feb. 24, 2026)  
-- [**TABC Seller-Server Certification**](https://lms.360training.com/lms/rest/certificate/41776133/learn2serve__tabc_seller_server_training.pdf) (Completed May 13, 2026)  
-- [**National Food-Handler Certification**](https://lms.360training.com/lms/rest/certificate/41776134/learn2serve_food_handler_training_course__anab_accredited_.pdf) (Completed May 14, 2026)  
-- [**COVID-19 Awareness Certification**](https://lms.360training.com/lms/rest/certificate/41910046/covid_19_awareness.pdf) (Completed May 24, 2026)  
-- [**Active Shooter Awareness Certification**](https://lms.360training.com/lms/rest/certificate/41910047/active_shooter_awareness.pdf) (Completed May 24, 2026)  
-- [**Fire Safety Awareness Certification**](https://alison.com/course/fire-safety-awareness) (Completed May 24, 2026)  
+- [**AWS Cloud Practitioner Essentials Certificate**](https://certifications-s3.s3.us-east-1.amazonaws.com/AWS-Cloud-Practitioner-Essentials-Certificate.pdf) (Completed Feb. 24, 2026)  
+- [**TABC Seller-Server Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/TABC-Seller-Server-Certification-05102026.pdf) (Completed May 13, 2026)  
+- [**National Food-Handler Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Food-Handler-Certification-05142026.pdf) (Completed May 14, 2026)  
+- [**COVID-19 Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/COVID19-Awareness-Certification-05242026.pdf) (Completed May 24, 2026)  
+- [**Active Shooter Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Active-Shooter-Awareness-Certification-05242026.pdf) (Completed May 24, 2026)  
+- [**Fire Safety Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Fire-Safety-Awareness-Certificate.pdf) (Completed May 24, 2026)  
 - **Self-taught**
  
