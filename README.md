@@ -5,7 +5,15 @@
 I am detail-oriented and hard-working. I’m a computer guy who can do physical labor. My educational background and personal interests are in video game development. I have 5+ years of warehouse and floor experience working in retail. I have 5+ years of experience working as an auditor and front-desk clerk in hospitality. I have 5 years of remote-work experience in the web compliance industry, performing search-ad analysis, web-crawler systems optimizations, and 1 year of experience in website back-end testing.
 
 ### KNOWLEDGE BASE
-**Experienced with cross-platform word processors:** *Microsoft Word, Google Docs, LibreOffice Writer* **Experienced with cross-platform spreadsheet tools:** *Microsoft Excel, Google Sheets, LibreOffice Calc* **Comfortable working in multiple operating systems:** *Microsoft Windows, macOS, Linux* **Familiar with industry-standard Property Management System (PMS) software:** *OperaPMS, RDPWin, SynXis* **Familiar with a diverse range of professional skills:** - **Administrative & Analytical:** *Data Entry, Data Analysis, Documentation, Record Keeping, Organization, Improvisation* - **Technical & Web-based:** *Coding, Exploratory Testing, Affiliate Marketing, Web Compliance* - **Customer-Facing & Support Roles:** *Customer Support, Technical Support, Point of Sale (POS) Systems, Cashiering* - **Operational & Manual Work:** *Warehouse Operations, Auditing, Inventory Management, Housekeeping, Dishwashing, Cleaning, Third-Party Relationship Management*
+**Experienced with cross-platform word processors:** *Microsoft Word, Google Docs, LibreOffice Writer*  
+**Experienced with cross-platform spreadsheet tools:** *Microsoft Excel, Google Sheets, LibreOffice Calc*  
+**Comfortable working in multiple operating systems:** *Microsoft Windows, macOS, Linux*  
+**Familiar with industry-standard Property Management System (PMS) software:** *OperaPMS, RDPWin, SynXis*  
+**Familiar with a diverse range of professional skills:**  
+- **Administrative & Analytical:** *Data Entry, Data Analysis, Documentation, Record Keeping, Organization, Improvisation* 
+- **Technical & Web-based:** *Coding, Exploratory Testing, Affiliate Marketing, Web Compliance* 
+- **Customer-Facing & Support Roles:** *Customer Support, Technical Support, Point of Sale (POS) Systems, Cashiering* 
+- **Operational & Manual Work:** *Warehouse Operations, Auditing, Inventory Management, Housekeeping, Dishwashing, Cleaning, Third-Party Relationship Management*
 
 **Familiar with a range of programming and scripting languages:** 
 - **Automation & Pattern-Matching:** *Bash, Python, Git, Regex*  
@@ -26,8 +34,9 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 
 ### WORK HISTORY
 **CLEANER/JANITOR** > *PJ's of Texas, San Antonio, TX* (Feb. 2026 – Mar. 2026)  
-- Performed comprehensive facility cleaning, including floor care (mopping, buffing, and vacuuming) and window cleaning, to ensure a sanitary and safe environment for all occupants.
-- Helped with daily waste removal operations, ensuring the prompt collection and sorting of general garbage and recyclables to maintain a clean, hazard-free environment.
+> at *Pluckers Wing Bar, Austin, TX* (Jun. 2026 – Current)  
+- Performs comprehensive facility cleaning—including floor care, window washing, and the daily sanitization of kitchens and bathrooms—to ensure a safe and hygienic environment for all occupants.
+- Handles daily waste removal operations, ensuring the prompt collection and sorting of general garbage and recyclables to maintain a clean, hazard-free environment.
 
 **CASHIER/FOOD SERVICE WORKER** > *Stanford University – Lakeside Dining, Palo Alto, CA* (Mar. 2024 – Apr. 2024)  
 - Executed daily dining room setup, including the arrangement of seating for guests and the stocking of condiment stations to ensure a seamless opening for the student body.
@@ -72,6 +81,7 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 - [**National Food-Handler Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Food-Handler-Certification-05142026.pdf) (Completed May 14, 2026)  
 - [**COVID-19 Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/COVID19-Awareness-Certification-05242026.pdf) (Completed May 24, 2026)  
 - [**Active Shooter Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Active-Shooter-Awareness-Certification-05242026.pdf) (Completed May 24, 2026)  
-- [**Fire Safety Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Fire-Safety-Awareness-Certificate.pdf) (Completed May 24, 2026)  
+- [**Fire Safety Awareness Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Fire-Safety-Awareness-Certificate.pdf) (Completed May 24, 2026)
+- [**Forklift Training Certification**](https://certifications-s3.s3.us-east-1.amazonaws.com/Forklift-Training-Certification-06292026.pdf) (Completed Jun. 29, 2026)
 - **Self-taught**
  
