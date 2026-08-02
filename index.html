@@ -247,8 +247,15 @@
     </style>
 </head>
 <body>
+    <!-- preloads iframe content and styling assets for immediate render upon decryption -->
+    <link rel="prefetch" href="https://pollination-node.onrender.com/encrypted-dossier-index.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="preload" as="style">
+
     <div class="resume-container">
-        <iframe src="https://pollination-node.onrender.com/dossier-index.html"></iframe>
+        <!-- sandbox attributes permit encrypted payload scripts to execute securely -->
+        <iframe src="https://pollination-node.onrender.com/encrypted-dossier-index.html" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
         <div id="scrollDownBtn" class="scroll-arrow">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10L12 15L17 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
