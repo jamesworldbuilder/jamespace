@@ -34,7 +34,7 @@ I am detail-oriented and hard-working. I’m a computer guy who can do physical 
 
 ### WORK HISTORY
 **CLEANER/JANITOR** > *PJ's of Texas, San Antonio, TX* (Feb. 2026 – Mar. 2026)  
-> at *Pluckers Wing Bar, Austin, TX* (Jun. 2026 – Current)  
+> at *Pluckers Wing Bar, Austin, TX* (Jun. 2026 – Aug. 2026)  
 - Performs comprehensive facility cleaning—including floor care, window washing, and the daily sanitization of kitchens and bathrooms—to ensure a safe and hygienic environment for all occupants.
 - Handles daily waste removal operations, ensuring the prompt collection and sorting of general garbage and recyclables to maintain a clean, hazard-free environment.
 
